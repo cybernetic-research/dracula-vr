@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<title>Dracula Unleashed VR</title>
+		<meta name="theme-color" content="#17100c" />
+		<link rel="manifest" href="manifest.webmanifest" />
+		<link rel="icon" href="icons/icon-192.png" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet" />
+		<style>
+			html,
+			body {
+				margin: 0;
+				height: 100%;
+				background: #000;
+				overflow: hidden;
+				font-family: 'IM Fell English', Georgia, serif;
+			}
+			#app canvas {
+				display: block;
+			}
+			#hint {
+				position: absolute;
+				top: 10px;
+				left: 12px;
+				right: 12px;
+				color: #b89c66;
+				font-size: 13px;
+				pointer-events: none;
+			}
+			/* the media panel: what of your disc's media this browser holds, and importing it (flat view only) */
+			#media {
+				position: absolute;
+				top: 34px;
+				right: 12px;
+				max-width: min(440px, calc(100vw - 24px));
+				box-sizing: border-box;
+				padding: 10px 12px;
+				border: 1px solid #4a3522;
+				border-radius: 8px;
+				background: rgba(23, 16, 12, 0.92);
+				color: #d4bf96;
+				font-size: 15px;
+				line-height: 1.35;
+			}
+			#media.open {
+				top: 50%;
+				right: 50%;
+				transform: translate(50%, -50%);
+				font-size: 17px;
+				padding: 18px 20px;
+			}
+			#media p {
+				margin: 0 0 8px;
+			}
+			#media .row {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 8px;
+				align-items: center;
+			}
+			#media button,
+			#media label.btn {
+				font: inherit;
+				cursor: pointer;
+				padding: 6px 12px;
+				border: 1px solid #a8873e;
+				border-radius: 6px;
+				background: #2a1a10;
+				color: #f1dcae;
+			}
+			#media button:disabled {
+				opacity: 0.4;
+				cursor: default;
+			}
+			#media progress {
+				width: 100%;
+				margin-top: 8px;
+			}
+			#media small {
+				color: #a08a68;
+			}
+		</style>
+		<script type="importmap">
+			{
+				"imports": {
+					"three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+					"three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<div id="app"></div>
+		<div id="vr-slot"></div>
+		<div id="hint">Bring your own Dracula Unleashed disc (see README). Desktop: click the desk. VR: point and pull the trigger.</div>
+		<div id="media" hidden>
+			<p id="media-status">Looking for the game media…</p>
+			<div class="row">
+				<label class="btn" id="media-add">Add media (.zip)<input id="media-file" type="file" accept=".zip,application/zip" multiple hidden /></label>
+				<button id="media-clear" type="button">Remove from this device</button>
+			</div>
+			<progress id="media-progress" max="1" value="0" hidden></progress>
+			<p id="media-help" hidden><small>Make the zips on your computer from the media folder prepared from your own disc
+				(<code>tools/pack-media.sh</code>: several zips of about 1 GB), copy them to this device (on a Quest: its
+				Download folder, over USB), then choose them here, together or one at a time. They are copied into this
+				browser's storage and the game then runs with no computer and no network. Nothing is uploaded anywhere.</small></p>
+		</div>
+		<script type="module" src="./src/main.js"></script>
+		<script type="module" src="./src/mediapanel.js"></script>
+	</body>
+</html>

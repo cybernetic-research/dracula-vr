@@ -1,0 +1,12 @@
+{
+	"name": "dracula-vr",
+	"version": "0.1.0",
+	"private": true,
+	"type": "module",
+	"description": "Dracula Unleashed (1993) in WebXR, played from your own disc: its scenes, upscaled, in a Victorian study",
+	"scripts": {
+		"serve": "node tools/serve.mjs --media ~/Movies/dracula-vr-media",
+		"serve:https": "node tools/serve.mjs --https --media ~/Movies/dracula-vr-media",
+		"check": "node tools/solve.mjs ~/Movies/dracula-vr-media/game.json"
+	}
+}

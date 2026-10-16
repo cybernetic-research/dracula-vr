@@ -1,0 +1,41 @@
+# Publishes the game (only this port's own code) to GitHub Pages on every push to main.
+# The media made from a disc is never in the repo and never published: each player imports their own on their device.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Collect the site
+        run: |
+          mkdir _site
+          cp -r index.html sw.js manifest.webmanifest icons src _site/
+          touch _site/.nojekyll
+      - name: Refuse to publish anything from a disc
+        run: |
+          bad=$(find _site -iname '*.mp4' -o -iname '*.m4a' -o -iname '*.umv' -o -iname '*.dta' -o -iname '*.bin' -o -iname '*.iso' -o -iname 'game.json' -o -path '*/media/*')
+          if [ -n "$bad" ]; then echo "Disc media found, not publishing:"; echo "$bad"; exit 1; fi
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4

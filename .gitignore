@@ -1,0 +1,17 @@
+node_modules/
+tools/.cert/
+.DS_Store
+__pycache__/
+
+# Data from your own disc, and anything made from it. Never commit or host it.
+dracula/
+media/
+*.bin
+*.cue
+*.iso
+*.DRC
+*.mp4
+
+# Zips made by tools/pack-media.sh (your disc media)
+*.zip
+CLAUDE.local.md
