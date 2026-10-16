@@ -50,9 +50,8 @@ scratchpad, never in the repo. The real game needs the user's `game.json`, which
 
 ## Open tasks (2026-10-16)
 
-1. **Publish to GitHub Pages** (only with the user's go-ahead; it makes the code public):
-   `git init`, first commit (check `git status` shows no media), create the GitHub repo (`gh repo create`), push to
-   `main`, then Settings → Pages → Source: **GitHub Actions**. The site is `https://<user>.github.io/<repo>/`.
+1. ~~Publish to GitHub Pages~~ Done 2026-10-16: https://github.com/cybernetic-research/dracula-vr, live at
+   https://cybernetic-research.github.io/dracula-vr/ (deployed by `.github/workflows/pages.yml` on push to `main`).
 2. **Headset check** with the real media: `tools/pack-media.sh` on the Mac (parts of ~1 GB, `--flat` for no 3D), copy
    the zips to the Quest's Download folder (2026-10-16: one single multi-GB zip failed in SideQuest in its last 100 MB,
    hence the parts; each zip holds a `parts/part-i-of-n` marker and the page lists missing parts), open the Pages
@@ -62,3 +61,8 @@ scratchpad, never in the repo. The real game needs the user's `game.json`, which
 3. Optional: wrap as an APK for the Quest library (Meta's PWA packaging / Bubblewrap), sideloaded; the manifest and
    icons are already there.
 4. Still pending from before: headset check of sound levels and of the 3D option.
+5. Private alternative (option "2"): `adb reverse tcp:8080 tcp:8080` + `tools/serve.mjs` (http), open
+   http://localhost:8080 on the Quest, add media there; localhost counts as a secure context, so it should then work
+   offline too. Not yet tried.
+6. PC VR (the user's friend has a Pimax): the same Pages URL in Chrome/Edge with SteamVR or Pimax OpenXR as the
+   runtime; "Add media" works on desktop too. Controllers untested beyond Quest.
