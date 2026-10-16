@@ -1,0 +1,4 @@
+# LF everywhere: this folder is shared between Windows and a Mac, and the shell scripts must keep LF
+* text=auto eol=lf
+*.png binary
+*.bat text eol=crlf
