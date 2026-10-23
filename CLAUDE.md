@@ -24,7 +24,8 @@ The disc image goes in `dracula/` (git-ignored); the prepared media lives outsid
 
 ## Code map
 
-- `index.html`: page, import map (three@0.186.1 from jsDelivr, IM Fell English from Google Fonts), media panel markup.
+- `index.html`: page, import map, media panel markup. `vendor/`: three@0.186.1 (only the files used) and the IM Fell
+  English font, kept locally so the game never needs the network (2026-10-23; before, they came from jsDelivr/Google).
 - `src/main.js`: renderer, scene playback, the desk (tabs: map, watch, journal, items, home, menu), game flow.
 - `src/engine.js`: the rules engine. `src/study.js`: the room. `src/panel.js`: canvas panels + `drawButton`.
 - `src/londonmap.js`: the map card (cached canvas: Victorian roads/parks/Thames from lon/lat, cartouche, hansom cab,
@@ -61,8 +62,8 @@ scratchpad, never in the repo. The real game needs the user's `game.json`, which
 3. Optional: wrap as an APK for the Quest library (Meta's PWA packaging / Bubblewrap), sideloaded; the manifest and
    icons are already there.
 4. Still pending from before: headset check of sound levels and of the 3D option.
-5. Private alternative (option "2"): `adb reverse tcp:8080 tcp:8080` + `tools/serve.mjs` (http), open
-   http://localhost:8080 on the Quest, add media there; localhost counts as a secure context, so it should then work
-   offline too. Not yet tried.
+5. Private alternative: `adb reverse tcp:8080 tcp:8080` + `tools/serve.mjs`, open http://localhost:8080 on the Quest.
+   `Play Dracula VR.command` now does the `adb reverse` itself when a Quest is plugged in (2026-10-23). Not yet tried
+   on the headset.
 6. PC VR (the user's friend has a Pimax): the same Pages URL in Chrome/Edge with SteamVR or Pimax OpenXR as the
    runtime; "Add media" works on desktop too. Controllers untested beyond Quest.

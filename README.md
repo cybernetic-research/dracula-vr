@@ -75,6 +75,18 @@ From then on the page works with no computer and no network (open it once while 
 version). The panel at the top right shows what is stored and can remove it. Clearing the Quest
 Browser's site data removes the media too.
 
+### With no internet (travelling)
+
+Everything the game needs is in this repo or in your media folder: three.js and the IM Fell English font are kept in
+`vendor/` (MIT and SIL OFL licences), so nothing is fetched from the internet. Two ways to play with no network:
+
+- **Quest on its own:** do the "On the headset alone" steps above at home, then open the page once more while
+  online and put the page on the Quest's home screen if you like. Before leaving, switch on airplane mode and check
+  that the page still opens and a scene plays.
+- **Laptop (Mac) with the media folder:** double-click `Play Dracula VR.command` and play on the screen; or plug the
+  Quest into the laptop with a USB cable (developer mode on, `brew install android-platform-tools` for `adb`): the
+  launcher then sets up `adb reverse` and you open http://localhost:8080 in the Quest Browser. No Wi-Fi is involved.
+
 ### Controls
 
 | | VR | Desktop |

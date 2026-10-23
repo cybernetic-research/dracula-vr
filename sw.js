@@ -3,9 +3,9 @@
 // - media/... (the folder made from your own disc) is answered from the "dracula-media" cache, which the page fills
 //   when you import the media zip (src/mediastore.js); videos get byte ranges, so seeking works. What is not in the
 //   cache goes to the network as before (the local server, tools/serve.mjs --media).
-// - the game itself (this repo's files, three.js and the font from their CDNs) is kept in the "dracula-app" cache so it
-//   also starts offline: our own files network-first (updates arrive when online), the versioned CDN files cache-first.
-const APP = 'dracula-app-v1';
+// - the game itself (this repo's files, with three.js and the font in vendor/) is kept in the "dracula-app" cache so it
+//   also starts offline, network-first (updates arrive when online).
+const APP = 'dracula-app-v2';
 const MEDIA = 'dracula-media';
 const PRECACHE = [
 	'./',
@@ -24,10 +24,12 @@ const PRECACHE = [
 	'src/londonmap.js',
 	'src/mediastore.js',
 	'src/mediapanel.js',
-	'https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js',
-	'https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.core.js',
-	'https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/webxr/VRButton.js',
-	'https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&display=swap'
+	'vendor/three/build/three.module.js',
+	'vendor/three/build/three.core.js',
+	'vendor/three/examples/jsm/webxr/VRButton.js',
+	'vendor/fonts/im-fell-english.css',
+	'vendor/fonts/im-fell-english.woff2',
+	'vendor/fonts/im-fell-english-italic.woff2'
 ];
 
 self.addEventListener('install', (e) => {
@@ -51,7 +53,6 @@ self.addEventListener('fetch', (e) => {
 	const scope = new URL(self.registration.scope);
 	if (url.origin === scope.origin && url.pathname.startsWith(scope.pathname + 'media/')) e.respondWith(media(req, url));
 	else if (url.origin === scope.origin) e.respondWith(networkFirst(req));
-	else if (/^(cdn\.jsdelivr\.net|fonts\.googleapis\.com|fonts\.gstatic\.com)$/.test(url.hostname)) e.respondWith(cacheFirst(req));
 });
 
 async function media(req, url) {
@@ -91,11 +92,3 @@ async function networkFirst(req) {
 	}
 }
 
-async function cacheFirst(req) {
-	const cache = await caches.open(APP);
-	const hit = await cache.match(req);
-	if (hit) return hit;
-	const res = await fetch(req);
-	if (res.ok || res.type === 'opaque') cache.put(req, res.clone());
-	return res;
-}

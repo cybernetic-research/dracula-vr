@@ -37,6 +37,7 @@ const types = {
 	'.json': 'application/json',
 	'.webmanifest': 'application/manifest+json',
 	'.css': 'text/css',
+	'.woff2': 'font/woff2',
 	'.png': 'image/png',
 	'.webp': 'image/webp',
 	'.jpg': 'image/jpeg',
