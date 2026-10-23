@@ -37,6 +37,9 @@ The disc image goes in `dracula/` (git-ignored); the prepared media lives outsid
   cache layout changes.**
 - `src/loadingmusic.js`: original loading music (Web Audio synth, no files), played by `mediapanel.js` during "Add media";
   follows the `dracula.music` setting.
+- `src/planner.js` (route finder: plan from any state, then play it through on a copy) and `src/hints.js` (the Clue tab's
+  next step, 3 levels; setting `dracula.clues`, off by default). `tools/check-hints.mjs` follows the clues and prints
+  counts only. Never print a clue's text when testing.
 - `tools/`: disc readers and extraction (Python), `serve.mjs` (local http/https server for the Quest on the LAN),
   `pack-media.sh`, `solve.mjs`/`check.mjs`.
 - `.github/workflows/pages.yml`: deploys `index.html sw.js manifest.webmanifest icons src` on push to `main`.

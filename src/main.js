@@ -4,6 +4,7 @@
 import * as THREE from 'three';
 import { VRButton } from 'three/addons/webxr/VRButton.js';
 import { Game, clockText } from './engine.js';
+import { nextStep, clueText } from './hints.js';
 import { Panel, drawButton, wrap, roundRect, INK, PAPER, BRASS, BLOOD, SERIF, DARKINK } from './panel.js';
 import { drawItem, itemName, drawGlyph } from './icons.js';
 import { buildStudy, makeThunder } from './study.js';
@@ -39,6 +40,11 @@ try {
 	guideOn = localStorage.getItem('dracula.guide') !== '0';
 } catch {}
 const guided = new Set(); // tabs whose guide line has been heard this session
+// clues for when you are stuck (this port's own addition, off unless you switch them on in the menu)
+let cluesOn = false;
+try {
+	cluesOn = localStorage.getItem('dracula.clues') === '1';
+} catch {}
 // the original's audio options: voices (carriage, watch, journal, map, items) and music
 let voicesOn = true;
 try {
@@ -364,6 +370,7 @@ const TABS = [
 	['journal', 'Journal', 'journal'],
 	['items', 'Items', 'items'],
 	['home', 'At home', 'home'],
+	['clue', 'Clue', 'clue'],
 	['menu', 'Menu', 'menu']
 ];
 
@@ -378,9 +385,11 @@ function drawDesk(g, p) {
 
 	if (playing) return drawTransport(g, p);
 	const ready = !!game && mode === 'play';
-	// tabs
-	TABS.forEach(([id, label, glyph], i) => {
-		const x = 30 + i * 335, y = 24, w = 320, h = 104;
+	// tabs (the clue tab only when clues are on)
+	const tabs = TABS.filter(([id]) => id !== 'clue' || cluesOn);
+	const step = (DW - 60) / tabs.length;
+	tabs.forEach(([id, label, glyph], i) => {
+		const x = 30 + i * step, y = 24, w = step - 15, h = 104;
 		const enabled = id === 'menu' || (ready && (id !== 'home' || game.state.location === 0));
 		const hot = p.button('tab_' + id, x, y, w, h, () => openTab(id), enabled);
 		roundRect(g, x, y, w, h, 14);
@@ -406,7 +415,7 @@ function drawDesk(g, p) {
 	g.beginPath();
 	g.rect(20, 200, DW - 40, DH - 300);
 	g.clip();
-	({ map: drawMap, watch: drawWatch, journal: drawJournal, items: drawItems, home: drawHome, menu: drawMenu })[ready || tab === 'menu' ? tab : 'menu'](g, p);
+	({ map: drawMap, watch: drawWatch, journal: drawJournal, items: drawItems, home: drawHome, clue: drawClue, menu: drawMenu })[ready || tab === 'menu' ? tab : 'menu'](g, p);
 	g.restore();
 	// messages
 	const now = performance.now();
@@ -775,6 +784,40 @@ async function sleep() {
 	await runSteps([r]);
 }
 
+// ---- Clue: uncovered a level at a time (src/hints.js) ------------------------------------------------------------
+let clue = { key: null, step: null, level: 0 };
+function drawClue(g, p) {
+	const s = game.state;
+	// a new clue once the game has moved on (what you carry does not count: a clue may tell you to pick something)
+	const key = JSON.stringify([s.clock, s.location, s.flags, s.items, s.addresses]);
+	if (clue.key !== key) clue = { key, step: null, level: 0 };
+	g.textAlign = 'left';
+	g.fillStyle = INK;
+	g.font = `44px ${SERIF}`;
+	g.fillText('A clue', 60, 275);
+	g.font = `italic 30px ${SERIF}`;
+	wrap(g, 'For when you are stuck. The clue is worked out from the game\'s own rules, from where you are now, and each press uncovers a little more: first what to do, then where, then when.', DW - 160).forEach((l, i) => g.fillText(l, 60, 330 + i * 40));
+	if (clue.level && clue.step) {
+		g.font = `38px ${SERIF}`;
+		let y = 480;
+		clueText(data, s, clue.step, clue.level, itemName).forEach((text, i) => {
+			g.fillStyle = BLOOD;
+			g.fillText(['I.', 'II.', 'III.'][i], 60, y);
+			g.fillStyle = INK;
+			for (const l of wrap(g, text, DW - 260)) g.fillText(l, 140, y), (y += 48);
+			y += 22;
+		});
+	}
+	const more = ['Uncover a clue', 'Where?', 'When?'][clue.level];
+	if (more && !clue.step?.lost)
+		drawButton(g, p, 'cluemore', 60, 790, 460, 90, more, () => {
+			clue.step ||= nextStep(data, game.state);
+			clue.level = clue.step?.lost ? 1 : clue.level + 1;
+			desk.redraw();
+		}, { size: 38 });
+	if (clue.level) drawButton(g, p, 'clueless', 560, 790, 380, 90, 'Cover it up', () => ((clue.level = 0), desk.redraw()), { size: 34 });
+}
+
 // ---- Menu ------------------------------------------------------------------------------------------------------
 function drawMenu(g, p) {
 	g.textAlign = 'left';
@@ -836,6 +879,15 @@ function drawMenu(g, p) {
 		if (guideOn) guided.clear();
 		desk.redraw();
 	}, { active: guideOn, size: 32 });
+	drawButton(g, p, 'clues', 1700, 720, 300, 80, cluesOn ? 'Clues: on' : 'Clues: off', () => {
+		cluesOn = !cluesOn;
+		try {
+			localStorage.setItem('dracula.clues', cluesOn ? '1' : '0');
+		} catch {}
+		if (!cluesOn && tab === 'clue') tab = 'menu';
+		toast(cluesOn ? 'Clues are on: the Clue tab on the desk uncovers one a little at a time.' : 'Clues are off.');
+		desk.redraw();
+	}, { active: cluesOn, size: 30 });
 	if (mode === 'over') {
 		g.fillStyle = BLOOD;
 		g.font = `40px ${SERIF}`;

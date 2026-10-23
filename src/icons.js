@@ -132,6 +132,7 @@ export const GLYPHS = {
 	sleep: (c) => { rect(c, 14, 54, 72, 18, '#7d5230'); rect(c, 14, 40, 18, 32, '#5a3a22'); rect(c, 34, 46, 30, 10, PAPER); c.font = 'bold 18px Georgia'; c.fillStyle = INK; c.fillText('z z', 58, 34); },
 	phonograph: (c) => { rect(c, 26, 60, 48, 22, '#5a3a22'); poly(c, [[50, 58], [56, 40], [86, 14], [92, 30], [60, 46]], BRASS); },
 	menu: (c) => { for (let i = 0; i < 3; i++) rect(c, 22, 26 + i * 18, 56, 8, BRASS); },
+	clue: (c) => { c.lineWidth = 12; c.strokeStyle = DARK; c.beginPath(); c.moveTo(62, 62); c.lineTo(86, 86); c.stroke(); c.lineWidth = 4; c.strokeStyle = INK; circle(c, 42, 42, 28, BRASS); circle(c, 42, 42, 21, '#d8e2e6'); },
 	play: (c) => poly(c, [[34, 22], [80, 50], [34, 78]], PAPER),
 	pause: (c) => { rect(c, 30, 24, 14, 52, PAPER); rect(c, 56, 24, 14, 52, PAPER); },
 	back: (c) => { poly(c, [[52, 22], [14, 50], [52, 78]], PAPER); poly(c, [[88, 22], [50, 50], [88, 78]], PAPER); },

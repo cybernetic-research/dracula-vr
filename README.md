@@ -108,6 +108,10 @@ Everything the game needs is in this repo or in your media folder: three.js and 
   you have been awake, and staying awake for two days is fatal.
 - **Menu**: new game, continue (the game saves itself after every step), three save slots; voices and music on/off; scenes 3D or flat (3D,
   the default: the scene opens up behind the frame, with depth; also switchable during a scene, under its controls); Van Helsing's spoken guide on/off.
+- **Clues** (this port's own addition, off unless you switch them on in the menu): a Clue tab on the desk. Each press
+  uncovers a little more of the next step towards a win, worked out from the rules there and then: first what to do and
+  roughly where, then exactly where (and what to carry), then when. If the game can no longer be won from where you
+  are, it says so.
 - **Sound**, as on the disc: the carriage driver greets you, repeats where you are going and announces the arrival; the
   watch speaks the time you set; the journal reads itself aloud when you open it (and only then is the newest page
   written down for good); each item is described when you pick it.
@@ -120,7 +124,10 @@ Everything the game needs is in this repo or in your media folder: three.js and 
   into data; plus the texts and tables. Needs `capstone` (disassembler).
 - `src/engine.js`: runs the rules exactly as the original program does around them (which list runs when: arriving,
   travelling, waiting, sleeping, the telegram tray, the epilogue after a win).
-- `tools/solve.mjs` and `tools/check.mjs`: spoiler-free checks of the extracted rules.
+- `src/planner.js`: a route finder over the rules (used by the clues and by `tools/solve.mjs`); `src/hints.js`: the
+  clues.
+- `tools/solve.mjs`, `tools/check.mjs` and `tools/check-hints.mjs`: spoiler-free checks of the extracted rules and of
+  the clues (they print counts and "WON" only).
 - `tools/upscale.py`: the upscaling (videos, and the street views with `PICTURES`).
 - `src/main.js`, `src/study.js`, `src/panel.js`, `src/icons.js`, `src/input.js`: the VR study, the desk, the icons.
 - `src/londonmap.js`: the map on the desk (this port's own Victorian travel guide of London).
