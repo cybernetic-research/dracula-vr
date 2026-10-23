@@ -1,5 +1,9 @@
 # Dracula Unleashed VR
 
+> **Unofficial fan project.** Not affiliated with, or endorsed by, the makers or rights holders of *Dracula Unleashed*;
+> the name and the game belong to them. It needs your own original disc, and no game content is included or hosted
+> here: no video, sound, pictures or text from the disc. Free, non-commercial.
+
 *Dracula Unleashed* (Viacom New Media, 1993), the FMV mystery set in London in the last days of 1899, played in VR
 from **your own disc**. You sit at a writing desk in Alexander's study; the game's filmed scenes play, upscaled, on a
 large framed screen on the wall. On the desk are a map of London (travel by carriage), a pocket watch (the clock,

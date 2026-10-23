@@ -30,6 +30,17 @@
 				pointer-events: none;
 			}
 			/* the media panel: what of your disc's media this browser holds, and importing it (flat view only) */
+			/* the disclaimer (flat view only), small in the bottom-left corner, clear of the VR button in the middle */
+			#legal {
+				position: absolute;
+				left: 12px;
+				bottom: 8px;
+				max-width: calc(50vw - 110px);
+				color: #8a7552;
+				font-size: 11px;
+				line-height: 1.3;
+				pointer-events: none;
+			}
 			#media {
 				position: absolute;
 				top: 34px;
@@ -95,6 +106,7 @@
 		<div id="app"></div>
 		<div id="vr-slot"></div>
 		<div id="hint">Bring your own Dracula Unleashed disc (see README). Desktop: click the desk. VR: point and pull the trigger.</div>
+		<div id="legal">Unofficial fan project, not affiliated with the rights holders. Needs your own disc; no game content is included.</div>
 		<div id="media" hidden>
 			<p id="media-status">Looking for the game media…</p>
 			<div class="row">
