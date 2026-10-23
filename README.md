@@ -69,7 +69,8 @@ never anything from a disc), with your media stored in the headset's browser:
 2. Copy the zips to the headset's **Download** folder (SideQuest, `adb push`, or the Quest as a USB drive on Windows).
 3. In the Quest Browser, open the game's page and press **Add media (.zip)**, then choose the zips (together, or one at
    a time: the page says which parts are still missing). They are copied into the browser's storage on the headset;
-   the zips in Download can be deleted afterwards.
+   the zips in Download can be deleted afterwards. While they copy, the port's own loading music plays (an organ, a bell and wind in a
+   stone hall, made live in the browser; a button turns it off).
 
 From then on the page works with no computer and no network (open it once while online after an update to get the new
 version). The panel at the top right shows what is stored and can remove it. Clearing the Quest
@@ -123,6 +124,8 @@ Everything the game needs is in this repo or in your media folder: three.js and 
 - `tools/upscale.py`: the upscaling (videos, and the street views with `PICTURES`).
 - `src/main.js`, `src/study.js`, `src/panel.js`, `src/icons.js`, `src/input.js`: the VR study, the desk, the icons.
 - `src/londonmap.js`: the map on the desk (this port's own Victorian travel guide of London).
+- `src/loadingmusic.js`: the music while the media is copied in: this port's own, synthesized with Web Audio (an organ
+  playing the opening of Bach's Toccata and Fugue in D minor, which is public domain, then bell, wind, thunder).
 - `sw.js`, `src/mediastore.js`, `src/mediapanel.js`: running without a computer: the media zip is imported into the
   browser's storage and the service worker answers the game's `media/...` requests from it (with byte ranges for video);
   the game's own files are cached so it starts offline. `tools/pack-media.sh` makes the zip.

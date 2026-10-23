@@ -35,6 +35,8 @@ The disc image goes in `dracula/` (git-ignored); the prepared media lives outsid
   with 206 ranges for video, else falls through to the network (so `tools/serve.mjs --media` still works). App files
   are cached in `dracula-app-vN`: **when adding a source file, add it to `PRECACHE` in `sw.js`; bump `APP` when the
   cache layout changes.**
+- `src/loadingmusic.js`: original loading music (Web Audio synth, no files), played by `mediapanel.js` during "Add media";
+  follows the `dracula.music` setting.
 - `tools/`: disc readers and extraction (Python), `serve.mjs` (local http/https server for the Quest on the LAN),
   `pack-media.sh`, `solve.mjs`/`check.mjs`.
 - `.github/workflows/pages.yml`: deploys `index.html sw.js manifest.webmanifest icons src` on push to `main`.

@@ -5,7 +5,7 @@
 //   cache goes to the network as before (the local server, tools/serve.mjs --media).
 // - the game itself (this repo's files, with three.js and the font in vendor/) is kept in the "dracula-app" cache so it
 //   also starts offline, network-first (updates arrive when online).
-const APP = 'dracula-app-v2';
+const APP = 'dracula-app-v3';
 const MEDIA = 'dracula-media';
 const PRECACHE = [
 	'./',
@@ -24,6 +24,7 @@ const PRECACHE = [
 	'src/londonmap.js',
 	'src/mediastore.js',
 	'src/mediapanel.js',
+	'src/loadingmusic.js',
 	'vendor/three/build/three.module.js',
 	'vendor/three/build/three.core.js',
 	'vendor/three/examples/jsm/webxr/VRButton.js',

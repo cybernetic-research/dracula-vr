@@ -1,11 +1,17 @@
 // The media panel on the page (flat view, before entering VR): shows whether this browser holds the media made from
 // your disc, imports it from a zip, removes it. Small in a corner when the game has its media; in the middle, with the
-// instructions, when it has none.
+// instructions, when it has none. While the media is copied in, the loading music plays (the game's music setting).
 import { registerWorker, mediaStatus, importZips, clearMedia, gb } from './mediastore.js';
+import { LoadingMusic } from './loadingmusic.js';
 
 const $ = (id) => document.getElementById(id);
 const panel = $('media'), status = $('media-status'), help = $('media-help'), bar = $('media-progress');
-const clearBtn = $('media-clear'), addLabel = $('media-add'), fileInput = $('media-file');
+const clearBtn = $('media-clear'), addLabel = $('media-add'), fileInput = $('media-file'), musicBtn = $('media-music');
+const music = new LoadingMusic();
+let musicOn = true;
+try {
+	musicOn = localStorage.getItem('dracula.music') !== '0';
+} catch {}
 
 async function servedByComputer() {
 	// HEAD bypasses the service worker, so this asks the server itself (tools/serve.mjs --media)
@@ -52,19 +58,36 @@ fileInput.addEventListener('change', async () => {
 	if (!files.length) return;
 	addLabel.hidden = clearBtn.hidden = true;
 	bar.hidden = false;
+	musicBtn.hidden = false;
+	musicBtn.textContent = musicOn ? 'Music: on' : 'Music: off';
+	if (musicOn) music.start();
 	try {
 		const r = await importZips(files, ({ done, total, file }) => {
 			bar.value = total ? done / total : 0;
 			status.textContent = file ? `Copying ${file}… ${gb(done)} of ${gb(total)}` : 'Done.';
 		});
 		status.textContent = `Added ${r.files} files (${gb(r.bytes)}).`;
-		// reload so the game starts with its media (and under the service worker, if it was not yet)
-		setTimeout(() => location.reload(), 800);
+		// reload so the game starts with its media (and under the service worker, if it was not yet), once the music
+		// has faded
+		music.stop(1.5);
+		setTimeout(() => location.reload(), 1700);
 	} catch (e) {
 		status.textContent = `Could not add the media: ${e.message || e}`;
 		addLabel.hidden = false;
-		bar.hidden = true;
+		bar.hidden = musicBtn.hidden = true;
+		music.stop();
 	}
+});
+
+// sound may only start after a click, and the file picker's choice may not count as one: unlock it on the click that
+// opens the picker
+addLabel.addEventListener('click', () => musicOn && music.unlock());
+
+musicBtn.addEventListener('click', () => {
+	musicOn = !musicOn;
+	musicBtn.textContent = musicOn ? 'Music: on' : 'Music: off';
+	if (musicOn) music.start();
+	else music.stop(0.5);
 });
 
 clearBtn.addEventListener('click', async () => {
